@@ -27,7 +27,8 @@ String motorSet = "";
 int speedSet = 0;
   
 //SETUP LOOP
-void setup() {
+void setup() 
+{
   neckControllerServoMotor.attach(9);  // attaches the servo on pin 9 (SERVO_2 on the Motor Drive Shield to the servo object
   neckControllerServoMotor.write(90); // tells the servo to position at 90-degrees ie. facing forward.
   delay(2000); // delay for two seconds
@@ -37,11 +38,13 @@ void setup() {
   moveForward(); // run function to make Obstacle avoiding Robot move forward
 } 
 //MAIN LOOP
-void loop() {
+void loop() 
+{
   checkForward(); // check that if the Obstacle avoiding Robot is supposed to be moving forward, that the drive motors are set to move forward - this is needed to overcome some issues with only using 4 AA NiMH batteries
   checkRoute(); // set ultrasonic sensor to scan for any possible obstacles
 }
-void checkRoute() {
+void checkRoute() 
+{
   int curLeft = 0;
   int curFront = 0;
   int curRight = 0;
@@ -54,23 +57,29 @@ void checkRoute() {
     delay(90); // wait 90ms for servo to get to position
     checkForward(); // check the Obstacle avoiding Robot is still moving forward
     curDist = readPing(); // get the current distance to any object in front of sensor
-    if (curDist < COLL_DIST) { // if the current distance to object is less than the collision distance
+    if (curDist < COLL_DIST) // if the current distance to object is less than the collision distanc
+    { 
       checkCourse(); // run the checkCourse function
       break; // jump out of this loop
     }
-    if (curDist < TURN_DIST) { // if current distance is less than the turn distance
+    if (curDist < TURN_DIST) // if current distance is less than the turn distance
+    { 
       changeRoute(); // run the changeRoute function
     }
-    if (curDist > curDist) {
+    if (curDist > curDist) 
+    {
       maxAngle = pos;
     }
-    if (pos > 90 && curDist > curLeft) {
+    if (pos > 90 && curDist > curLeft)
+    {
       curLeft = curDist;
     }
-    if (pos == 90 && curDist > curFront) {
+    if (pos == 90 && curDist > curFront) 
+    {
       curFront = curDist;
     }
-    if (pos < 90 && curDist > curRight) {
+    if (pos < 90 && curDist > curRight) 
+    {
       curRight = curDist;
     }
   }
@@ -78,56 +87,70 @@ void checkRoute() {
   maxRight = curRight;
   maxFront = curFront;
 }
-void setCourse() { // set direction for travel based on a very basic distance map, simply which direction has the greatest distance to and object - turning right or left?
-  if (maxAngle < 90) {
+void setCourse() // set direction for travel based on a very basic distance map, simply which direction has the greatest distance to and object - turning right or left
+{ 
+  if (maxAngle < 90)
+  {
     turnRight();
   }
-  if (maxAngle > 90) {
+  if (maxAngle > 90) 
+  {
     turnLeft();
   }
   maxLeft = 0;
   maxRight = 0;
   maxFront = 0;
 }
-void checkCourse() { // we're about to hit something so move backwards, stop, find where the empty Route is.
+void checkCourse() //about to hit something so move backwards, stop, find where the empty Route is.
+{ 
   moveBackward();
   delay(500);
   moveStop();
   setCourse();
 }
-void changeRoute() {
-  if (pos < 90) {
+void changeRoute() 
+{
+  if (pos < 90) 
+  {
     lookLeft(); // when current position of sensor is less than 90-degrees, it means the object is on the right hand side so look left
   }
-  if (pos > 90) {
+  if (pos > 90) 
+  {
     lookRight(); // when current position of sensor is greater than 90-degrees, it means the object is on the left hand side so look right
   }
 }
-int readPing() { // read the ultrasonic sensor distance
+int readPing() // read the ultrasonic sensor distance
+{ 
   delay(70);
   unsigned int uS = sonar.ping();
   int cm = uS / US_ROUNDTRIP_CM;
   return cm;
 }
-void checkForward() {
-  if (motorSet == "FORWARD") {
+void checkForward() 
+{
+  if (motorSet == "FORWARD") 
+  {
     leftMotor.run(FORWARD);  // ensure motors are going forward
     rightMotor.run(FORWARD);
   }
 }
-void checkBackward() {
-  if (motorSet == "BACKWARD") {
+void checkBackward()
+{
+  if (motorSet == "BACKWARD") 
+  {
     leftMotor.run(BACKWARD);  // ensure motors are going backward
     rightMotor.run(BACKWARD);
   }
 } 
 // In some cases, the Motor Drive Shield may just stop if the supply voltage is too low (due to using only four NiMH AA cells).
 // The above functions simply remind the Shield that if it's supposed to go forward, then ensure it is going forward and vice versa.
-void moveStop() {
+void moveStop() 
+{
   leftMotor.run(RELEASE);  // stop the motors.
   rightMotor.run(RELEASE);
 }
-void moveForward() {
+void moveForward() 
+{
   motorSet = "FORWARD";
   leftMotor.run(FORWARD);      // turn it on going forward
   rightMotor.run(FORWARD);      // turn it on going forward
@@ -138,7 +161,8 @@ void moveForward() {
     delay(5);
   }
 }
-void moveBackward() {
+void moveBackward() 
+{
   motorSet = "BACKWARD";
   leftMotor.run(BACKWARD);      // turn it on going forward
   rightMotor.run(BACKWARD);     // turn it on going forward
@@ -149,7 +173,8 @@ void moveBackward() {
     delay(5);
   }
 }
-void turnRight() {
+void turnRight() 
+{
   motorSet = "RIGHT";
   leftMotor.run(FORWARD);      // turn motor 1 forward
   rightMotor.run(BACKWARD);     // turn motor 2 backward
@@ -158,7 +183,8 @@ void turnRight() {
   leftMotor.run(FORWARD);      // set both motors back to forward
   rightMotor.run(FORWARD);
 }
-void turnLeft() {
+void turnLeft() 
+{
   motorSet = "LEFT";
   leftMotor.run(BACKWARD);     // turn motor 1 backward
   rightMotor.run(FORWARD);      // turn motor 2 forward
@@ -167,12 +193,14 @@ void turnLeft() {
   leftMotor.run(FORWARD);      // turn it on going forward
   rightMotor.run(FORWARD);      // turn it on going forward
 }
-void lookRight() {
+void lookRight() 
+{
   rightMotor.run(BACKWARD);  // looking right? set right motor backwards for 400ms
   delay(400);
   rightMotor.run(FORWARD);
 }
-void lookLeft() {
+void lookLeft() 
+{
   leftMotor.run(BACKWARD);  // looking left? set left motor backwards for 400ms
   delay(400);
   leftMotor.run(FORWARD);
